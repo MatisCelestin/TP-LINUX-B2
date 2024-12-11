@@ -1,9 +1,9 @@
 # I. Init
 
 - [I. Init](#i-init)
-  - [1. sudo c pa bo](#3-sudo-c-pa-bo)
-  - [2. Un premier conteneur en vif](#4-un-premier-conteneur-en-vif)
-  - [3. Un deuxième conteneur en vif](#5-un-deuxième-conteneur-en-vif)
+  - [1. sudo c pa bo](#1-sudo-c-pa-bo)
+  - [2. Un premier conteneur en vif](#2-un-premier-conteneur-en-vif)
+  - [3. Un deuxième conteneur en vif](#3-un-deuxième-conteneur-en-vif)
 
 
 
