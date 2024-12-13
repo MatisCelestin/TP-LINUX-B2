@@ -1,11 +1,17 @@
 # I. Init
-
 - [I. Init](#i-init)
   - [1. sudo c pa bo](#1-sudo-c-pa-bo)
   - [2. Un premier conteneur en vif](#2-un-premier-conteneur-en-vif)
   - [3. Un deuxième conteneur en vif](#3-un-deuxième-conteneur-en-vif)
+# II. Images
 
+- [II. Images](#ii-images)
+  - [1. Images publiques](#1-images-publiques)
+  - [2. Construire une image](#2-construire-une-image)
+# III. Docker compose
+- [III. Docker compose](#iii-docker-compose)
 
+# I. Init
 
 ## 1. sudo c pa bo
 
@@ -462,4 +468,130 @@ KeyboardInterrupt
 >>> exit
 root@3b3585212abe:/# 
 
+```
+
+
+# II. Images
+
+- [II. Images](#ii-images)
+  - [1. Images publiques](#1-images-publiques)
+  - [2. Construire une image](#2-construire-une-image)
+
+
+## 1. Images publiques
+
+🌞 Récupérez des images 
+
+```
+matis@thinkpad:~$ docker pull wordpress:latest
+latest: Pulling from library/wordpress
+bc0965b23a04: Already exists 
+e0aa8e8bfd10: Pulling fs layer 
+f45eeb7b7c66: Pulling fs layer 
+2802fa207e46: Pulling fs layer 
+2bc706e6dbbe: Pulling fs layer 
+8f2b85a95cfd: Pulling fs layer 
+2586d713206f: Waiting 
+086063f0275c: Waiting 
+61a388cf2f83: Waiting 
+73fd6b827991: Waiting 
+c2dd75e58cab: Pull complete 
+3b01564181f9: Pull complete 
+16d45113a90d: Pull complete 
+4f4fb700ef54: Pull complete 
+c4f8720ddb1e: Pull complete 
+d374174149dd: Pull complete 
+f09c82e22e1b: Pull complete 
+dd7711b88413: Pull complete 
+a89cceed0693: Pull complete 
+dab7a4cf5d37: Pull complete 
+e6f609a11365: Pull complete 
+1bbc7feeba6d: Pull complete 
+Digest: sha256:2f3572d5cd722489fe47d59ed45d947dc9507f5a019eb0567ddf24aedf9257ed
+Status: Downloaded newer image for wordpress:latest
+docker.io/library/wordpress:latest
+matis@thinkpad:~$ docker pull linuxserver/wikijs
+Using default tag: latest
+latest: Pulling from linuxserver/wikijs
+72387e7898ce: Pull complete 
+ec7680b185bf: Pull complete 
+b80232684b80: Pull complete 
+52e5d6eefe42: Pull complete 
+f224b10b4dc1: Pull complete 
+d179dce5799c: Pull complete 
+ff211b9bebf2: Pull complete 
+979004086415: Pull complete 
+Digest: sha256:45ecf23a3bf849a0bf0c9e2d832aede159e98efd29fef70bbc7ff4dd87522eba
+Status: Downloaded newer image for linuxserver/wikijs:latest
+docker.io/linuxserver/wikijs:latest
+```
+
+🌞 Lancez un conteneur à partir de l'image Python
+
+```
+matis@thinkpad:~$ docker run -it 3ca4060004b1 bash
+root@62414b89daa2:/# python 
+Python 3.13.1 (main, Dec  4 2024, 20:40:27) [GCC 12.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+```
+## 2. Construire une image
+
+🌞 Build l'image
+🌞 Lancer l'image
+
+```
+matis@thinkpad:~/python_app_build$ docker build . -t python_app:version_de_ouf
+[+] Building 2.5s (10/10) FINISHED                                     docker:default
+ => [internal] load build definition from Dockerfile                             0.0s
+ => => transferring dockerfile: 182B                                             0.0s
+ => [internal] load metadata for docker.io/library/debian:latest                 0.0s
+ => [internal] load .dockerignore                                                0.0s
+ => => transferring context: 2B                                                  0.0s
+ => [1/5] FROM docker.io/library/debian:latest                                   0.0s
+ => [internal] load build context                                                0.0s
+ => => transferring context: 27B                                                 0.0s
+ => CACHED [2/5] RUN apt update                                                  0.0s
+ => CACHED [3/5] RUN apt install python3 -y                                      0.0s
+ => [4/5] RUN apt install python3-emoji                                          2.0s
+ => [5/5] COPY app.py ./                                                         0.0s 
+ => exporting to image                                                           0.4s 
+ => => exporting layers                                                          0.4s 
+ => => writing image sha256:e33ec153883c5012d115ae261cdcecd925dec7014e9a77d287d  0.0s 
+ => => naming to docker.io/library/python_app:version_de_ouf                     0.0s 
+matis@thinkpad:~/python_app_build$    
+```
+
+# III. Docker compose
+
+🌞 Lancez les deux conteneurs avec docker compose
+
+```
+matis@thinkpad:~/compose_test$ docker compose up -d
+WARN[0000] /home/matis/compose_test/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Running 3/3
+ ✔ Network compose_test_default                  Created                         0.1s 
+ ✔ Container compose_test-conteneur_flopesque-1  Started                         0.3s 
+ ✔ Container compose_test-conteneur_nul-1        Started     
+```
+
+🌞 Vérifier que les deux conteneurs tournent
+
+```
+matis@thinkpad:~/compose_test$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                                                 NAMES
+7336d41e4b2d   debian         "sleep 9999"             52 seconds ago   Up 51 seconds                                                         compose_test-conteneur_nul-1
+d2f78e661c45   debian         "sleep 9999"             52 seconds ago   Up 51 seconds                                                         compose_test-conteneur_flopesque-1
+```
+🌞 Ping conteneur_flopesque
+
+```
+root@7336d41e4b2d:/# ping conteneur_flopesque
+PING conteneur_flopesque (172.18.0.2) 56(84) bytes of data.
+64 bytes from compose_test-conteneur_flopesque-1.compose_test_default (172.18.0.2): icmp_seq=1 ttl=64 time=0.207 ms
+64 bytes from compose_test-conteneur_flopesque-1.compose_test_default (172.18.0.2): icmp_seq=2 ttl=64 time=0.095 ms
+64 bytes from compose_test-conteneur_flopesque-1.compose_test_default (172.18.0.2): icmp_seq=3 ttl=64 time=0.095 ms
+^C
+--- conteneur_flopesque ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 0.095/0.132/0.207/0.052 ms
 ```
