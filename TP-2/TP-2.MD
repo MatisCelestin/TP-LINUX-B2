@@ -73,4 +73,4 @@ matis@ThinkPad:~$ curl www.supersite.com | grep tropdecode
 
 ### 🌞 HTTPS auto-signé# TP2 : Utilisation courante de Docker
 
-[http-auto](./Dossier-conf/https-auto)
+[http-auto](./https-auto)
